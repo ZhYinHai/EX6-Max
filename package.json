@@ -1,14 +1,23 @@
 {
   "name": "phanteks-ex6-page-preview",
   "private": true,
-  "version": "0.2.4",
+  "version": "0.3.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "node --check assets/js/preview.js && node --check assets/js/nexlinq.js && node --check assets/js/telemetry-simulator.js && npm run build"
+    "check": "node --check assets/js/preview.js && node --check assets/js/nexlinq.js && node --check assets/js/telemetry-simulator.js && npm run format:check && npm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:smoke": "playwright test",
+    "release:zip": "npm run check && sh scripts/build-plugin-zip.sh"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "prettier": "^3.9.6",
     "vite": "^4.5.0"
   }
 }
