@@ -1,0 +1,14 @@
+{
+  "name": "phanteks-ex6-page-preview",
+  "private": true,
+  "version": "0.2.4",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "node --check assets/js/preview.js && node --check assets/js/nexlinq.js && node --check assets/js/telemetry-simulator.js && npm run build"
+  },
+  "devDependencies": {
+    "vite": "^4.5.0"
+  }
+}
