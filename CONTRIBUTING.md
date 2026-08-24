@@ -93,7 +93,7 @@ git branch -D
 ## Git workflow
 
 All commands in this guide are single-line, cross-platform commands. They work in macOS Terminal, Windows
-PowerShell, Windows Terminal, and Git Bash. Node.js 20 or newer is required.
+PowerShell, Windows Terminal, and Git Bash. Node.js 20.19 or newer is required.
 
 1. Keep `main` deployable and create one short-lived branch per change:
    - `feature/nexlinq-video-playback`
