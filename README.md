@@ -11,6 +11,8 @@ npm install
 npm run dev
 ```
 
+Local tooling requires Node.js 20 or newer.
+
 Open the local URL printed by Vite. To verify the production preview:
 
 - NexLinq workspace: `http://localhost:5173/?feature=nexlinq`
@@ -30,6 +32,13 @@ Run the same validation expected before opening a pull request:
 npm run check
 ```
 
+Run the browser smoke test after installing Playwright's Chromium browser once:
+
+```bash
+npx playwright install chromium
+npm run test:smoke
+```
+
 ## Feature ownership
 
 The project is divided so NexLinq and telemetry can be developed with minimal merge conflicts:
@@ -41,6 +50,12 @@ The project is divided so NexLinq and telemetry can be developed with minimal me
 See `CONTRIBUTING.md` for the branch, commit, and pull-request workflow.
 
 ## Installation
+
+Create a tested, upload-ready ZIP from the repository root:
+
+```bash
+npm run release:zip
+```
 
 1. Upload `phanteks-ex6-page.zip` in **WordPress Admin → Plugins → Add New Plugin → Upload Plugin**.
 2. Activate **Phanteks EX6 Max Ultra Page**.

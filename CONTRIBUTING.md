@@ -2,9 +2,9 @@
 
 ## Ownership boundaries
 
-| Feature | Template | JavaScript | CSS |
-| --- | --- | --- | --- |
-| NexLinq | `templates/sections/nexlinq.php` | `assets/js/nexlinq.js` | `assets/css/nexlinq.css` |
+| Feature             | Template                                     | JavaScript                         | CSS                                  |
+| ------------------- | -------------------------------------------- | ---------------------------------- | ------------------------------------ |
+| NexLinq             | `templates/sections/nexlinq.php`             | `assets/js/nexlinq.js`             | `assets/css/nexlinq.css`             |
 | Telemetry simulator | `templates/sections/telemetry-simulator.php` | `assets/js/telemetry-simulator.js` | `assets/css/telemetry-simulator.css` |
 
 The plugin bootstrap, Vite preview, package manifests, and root documentation are shared integration files. Announce changes to these files before editing them.

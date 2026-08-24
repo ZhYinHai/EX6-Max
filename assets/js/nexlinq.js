@@ -81,7 +81,10 @@
     const skewY = topRight.y - topLeft.y + perspectiveX * topRight.y;
     const scaleY = bottomLeft.y - topLeft.y + perspectiveY * bottomLeft.y;
 
-    deviceScreen.style.setProperty('--ex6-screen-content-transform', `matrix3d(${scaleX / width}, ${skewY / width}, 0, ${perspectiveX / width}, ${skewX / height}, ${scaleY / height}, 0, ${perspectiveY / height}, 0, 0, 1, 0, ${topLeft.x}, ${topLeft.y}, 0, 1)`);
+    deviceScreen.style.setProperty(
+      '--ex6-screen-content-transform',
+      `matrix3d(${scaleX / width}, ${skewY / width}, 0, ${perspectiveX / width}, ${skewX / height}, ${scaleY / height}, 0, ${perspectiveY / height}, 0, 0, 1, 0, ${topLeft.x}, ${topLeft.y}, 0, 1)`,
+    );
   };
 
   projectScreenContent();
@@ -135,14 +138,17 @@
       });
       polyline?.setAttribute('points', points.map(({ x, y }) => `${x},${y}`).join(' '));
       if (dots) dots.innerHTML = points.map(({ x, y }) => `<circle cx="${x}" cy="${y}"/>`).join('');
-      widgetLine.setAttribute('aria-label', `Live CPU temperature history, current value ${simulatedTemperature} degrees Celsius`);
+      widgetLine.setAttribute(
+        'aria-label',
+        `Live CPU temperature history, current value ${simulatedTemperature} degrees Celsius`,
+      );
     }
   };
 
   renderWidgetTelemetry();
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     window.setInterval(() => {
-      const direction = Math.random() > .5 ? 1 : -1;
+      const direction = Math.random() > 0.5 ? 1 : -1;
       const change = direction * (1 + Math.floor(Math.random() * 3));
       simulatedTemperature = clampTemperature(simulatedTemperature + change);
       temperatureHistory.push(simulatedTemperature);
@@ -169,7 +175,9 @@
 
   const defaultBackgroundButton = root.querySelector('.ex6-lcd-background--space');
   if (defaultBackgroundButton) {
-    activeBackgroundImage = getComputedStyle(defaultBackgroundButton).getPropertyValue('--ex6-lcd-background-image').trim();
+    activeBackgroundImage = getComputedStyle(defaultBackgroundButton)
+      .getPropertyValue('--ex6-lcd-background-image')
+      .trim();
     const initialMode = modeButtons.find((item) => item.classList.contains('is-active'))?.dataset.screenMode;
     if (initialMode) applyBackgroundToMode(initialMode);
   }
@@ -227,51 +235,63 @@
     const [file] = backgroundUpload.files;
     if (!file || !file.type.startsWith('image/')) return;
     const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      if (typeof reader.result !== 'string') return;
-      const previewImage = new Image();
-      previewImage.addEventListener('load', () => {
-        const maxWidth = 1600;
-        const maxHeight = 720;
-        const scale = Math.min(1, maxWidth / previewImage.naturalWidth, maxHeight / previewImage.naturalHeight);
-        const canvas = document.createElement('canvas');
-        canvas.width = Math.max(1, Math.round(previewImage.naturalWidth * scale));
-        canvas.height = Math.max(1, Math.round(previewImage.naturalHeight * scale));
-        const context = canvas.getContext('2d');
-        if (!context) {
-          if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Image processing failed';
-          return;
-        }
-        context.imageSmoothingEnabled = true;
-        context.imageSmoothingQuality = 'high';
-        context.drawImage(previewImage, 0, 0, canvas.width, canvas.height);
-        const optimizedImage = canvas.toDataURL('image/webp', .86);
-        if (!optimizedImage || optimizedImage === 'data:,') {
-          if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Image processing failed';
-          return;
-        }
+    reader.addEventListener(
+      'load',
+      () => {
+        if (typeof reader.result !== 'string') return;
+        const previewImage = new Image();
+        previewImage.addEventListener(
+          'load',
+          () => {
+            const maxWidth = 1600;
+            const maxHeight = 720;
+            const scale = Math.min(1, maxWidth / previewImage.naturalWidth, maxHeight / previewImage.naturalHeight);
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(previewImage.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(previewImage.naturalHeight * scale));
+            const context = canvas.getContext('2d');
+            if (!context) {
+              if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Image processing failed';
+              return;
+            }
+            context.imageSmoothingEnabled = true;
+            context.imageSmoothingQuality = 'high';
+            context.drawImage(previewImage, 0, 0, canvas.width, canvas.height);
+            const optimizedImage = canvas.toDataURL('image/webp', 0.86);
+            if (!optimizedImage || optimizedImage === 'data:,') {
+              if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Image processing failed';
+              return;
+            }
 
-        activeBackgroundImage = `url("${optimizedImage}")`;
-        activeBackgroundIsUpload = true;
+            activeBackgroundImage = `url("${optimizedImage}")`;
+            activeBackgroundIsUpload = true;
 
-        backgroundButtons.forEach((item) => {
-          item.classList.remove('is-active');
-          item.setAttribute('aria-pressed', 'false');
-        });
-        backgroundUploadControl?.classList.add('is-active');
-        backgroundUploadControl?.style.setProperty('--ex6-lcd-background-image', activeBackgroundImage);
-        if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Uploaded image';
-        if (backgroundUploadControl) backgroundUploadControl.title = file.name;
+            backgroundButtons.forEach((item) => {
+              item.classList.remove('is-active');
+              item.setAttribute('aria-pressed', 'false');
+            });
+            backgroundUploadControl?.classList.add('is-active');
+            backgroundUploadControl?.style.setProperty('--ex6-lcd-background-image', activeBackgroundImage);
+            if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Uploaded image';
+            if (backgroundUploadControl) backgroundUploadControl.title = file.name;
 
-        const activeMode = modeButtons.find((item) => item.classList.contains('is-active'))?.dataset.screenMode;
-        if (activeMode) applyBackgroundToMode(activeMode);
-      }, { once: true });
-      previewImage.addEventListener('error', () => {
-        if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Unsupported image';
-      }, { once: true });
-      if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Processing image…';
-      previewImage.src = reader.result;
-    }, { once: true });
+            const activeMode = modeButtons.find((item) => item.classList.contains('is-active'))?.dataset.screenMode;
+            if (activeMode) applyBackgroundToMode(activeMode);
+          },
+          { once: true },
+        );
+        previewImage.addEventListener(
+          'error',
+          () => {
+            if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Unsupported image';
+          },
+          { once: true },
+        );
+        if (backgroundUploadLabel) backgroundUploadLabel.textContent = 'Processing image…';
+        previewImage.src = reader.result;
+      },
+      { once: true },
+    );
     reader.readAsDataURL(file);
   });
 
@@ -312,15 +332,23 @@
 
     if (file.type === 'image/gif' && screenMediaImage) {
       const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        if (typeof reader.result !== 'string') return;
-        screenMediaImage.src = reader.result;
-        screenMediaImage.hidden = false;
-        activateScreenMedia(file.name);
-      }, { once: true });
-      reader.addEventListener('error', () => {
-        if (screenMediaLabel) screenMediaLabel.textContent = 'Media processing failed';
-      }, { once: true });
+      reader.addEventListener(
+        'load',
+        () => {
+          if (typeof reader.result !== 'string') return;
+          screenMediaImage.src = reader.result;
+          screenMediaImage.hidden = false;
+          activateScreenMedia(file.name);
+        },
+        { once: true },
+      );
+      reader.addEventListener(
+        'error',
+        () => {
+          if (screenMediaLabel) screenMediaLabel.textContent = 'Media processing failed';
+        },
+        { once: true },
+      );
       reader.readAsDataURL(file);
       return;
     }
@@ -345,18 +373,23 @@
         screenMediaVideo.hidden = true;
         if (screenMediaPlaceholder) {
           screenMediaPlaceholder.hidden = false;
-          screenMediaPlaceholder.innerHTML = '<strong>Video unavailable</strong><span>Use an H.264 MP4 for browser compatibility</span>';
+          screenMediaPlaceholder.innerHTML =
+            '<strong>Video unavailable</strong><span>Use an H.264 MP4 for browser compatibility</span>';
         }
         if (screenMediaLabel) screenMediaLabel.textContent = 'Unsupported video or codec';
         return;
       }
       triedDataUrlFallback = true;
       const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        if (typeof reader.result !== 'string') return;
-        screenMediaVideo.src = reader.result;
-        screenMediaVideo.load();
-      }, { once: true });
+      reader.addEventListener(
+        'load',
+        () => {
+          if (typeof reader.result !== 'string') return;
+          screenMediaVideo.src = reader.result;
+          screenMediaVideo.load();
+        },
+        { once: true },
+      );
       reader.addEventListener('error', loadDataUrlFallback, { once: true });
       reader.readAsDataURL(file);
     };
@@ -368,8 +401,11 @@
     screenMediaVideo.load();
   });
 
-  window.addEventListener('pagehide', () => {
-    if (screenMediaObjectUrl) URL.revokeObjectURL(screenMediaObjectUrl);
-  }, { once: true });
-
+  window.addEventListener(
+    'pagehide',
+    () => {
+      if (screenMediaObjectUrl) URL.revokeObjectURL(screenMediaObjectUrl);
+    },
+    { once: true },
+  );
 })();
