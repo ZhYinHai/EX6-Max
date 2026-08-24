@@ -10,6 +10,23 @@ permissions:
 
 jobs:
   validate:
+    name: Project checks (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+
+  browser-smoke:
+    name: PHP and browser smoke test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +37,5 @@ jobs:
       - run: npm ci
       - name: Check plugin PHP syntax
         run: find . -name '*.php' -not -path './node_modules/*' -print0 | xargs -0 -n1 php -l
-      - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm run test:smoke

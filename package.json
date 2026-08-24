@@ -13,10 +13,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:smoke": "playwright test",
-    "release:zip": "npm run check && sh scripts/build-plugin-zip.sh"
+    "release:zip": "npm run check && node scripts/build-plugin-zip.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
+    "archiver": "^8.0.0",
     "prettier": "^3.9.6",
     "vite": "^4.5.0"
   }

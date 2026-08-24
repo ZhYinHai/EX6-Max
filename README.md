@@ -11,7 +11,9 @@ npm install
 npm run dev
 ```
 
-Local tooling requires Node.js 20 or newer.
+Local tooling requires Node.js 20 or newer. The same npm commands work in macOS Terminal, Windows PowerShell,
+Windows Terminal, and Git Bash. Windows developers can install Node.js from `nodejs.org` or use nvm-windows;
+macOS developers can use the Node.js installer, Homebrew, or nvm.
 
 Open the local URL printed by Vite. To verify the production preview:
 
@@ -39,6 +41,9 @@ npx playwright install chromium
 npm run test:smoke
 ```
 
+Playwright may request additional browser dependencies on first use. On both macOS and Windows, accept the
+Chromium installation and rerun `npm run test:smoke`.
+
 ## Feature ownership
 
 The project is divided so NexLinq and telemetry can be developed with minimal merge conflicts:
@@ -56,6 +61,11 @@ Create a tested, upload-ready ZIP from the repository root:
 ```bash
 npm run release:zip
 ```
+
+ZIP creation is implemented in Node.js and works identically from PowerShell, Command Prompt, Git Bash, and macOS
+Terminal. It does not require the system `zip` command.
+
+Pull requests run the project checks on Windows, macOS, and Linux. The PHP and browser smoke tests run on Linux.
 
 1. Upload `phanteks-ex6-page.zip` in **WordPress Admin → Plugins → Add New Plugin → Upload Plugin**.
 2. Activate **Phanteks EX6 Max Ultra Page**.
