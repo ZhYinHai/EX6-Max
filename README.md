@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Local tooling requires Node.js 20 or newer. The same npm commands work in macOS Terminal, Windows PowerShell,
+Local tooling requires Node.js 20.19 or newer. The same npm commands work in macOS Terminal, Windows PowerShell,
 Windows Terminal, and Git Bash. Windows developers can install Node.js from `nodejs.org` or use nvm-windows;
 macOS developers can use the Node.js installer, Homebrew, or nvm.
 
