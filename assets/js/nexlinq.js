@@ -137,7 +137,7 @@
         return { x, y };
       });
       polyline?.setAttribute('points', points.map(({ x, y }) => `${x},${y}`).join(' '));
-      if (dots) dots.innerHTML = points.map(({ x, y }) => `<circle cx="${x}" cy="${y}"/>`).join('');
+      if (dots) dots.innerHTML = points.map(({ x, y }) => `<circle cx="${x}" cy="${y}" r="5"/>`).join('');
       widgetLine.setAttribute(
         'aria-label',
         `Live CPU temperature history, current value ${simulatedTemperature} degrees Celsius`,

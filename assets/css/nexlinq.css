@@ -904,7 +904,6 @@
   stroke-linejoin: round;
 }
 .ex6-widget-line circle {
-  r: 5;
   fill: #fff;
 }
 .ex6-device-label {
