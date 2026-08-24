@@ -1,4 +1,4 @@
-# Phanteks EX6 Max Ultra WordPress page starter
+# Phanteks EX6 Max Ultra WordPress plugin
 
 This plugin adds the shortcode `[ex6_max_ultra]`. Place it in a normal WordPress page to preserve the active theme's global header, footer, navigation, cookie banner, and tracking.
 
@@ -7,7 +7,7 @@ This plugin adds the shortcode `[ex6_max_ultra]`. Place it in a normal WordPress
 The Vite preview renders the WordPress template directly, so template changes appear without copying markup into a separate demo page.
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -63,7 +63,8 @@ npm run release:zip
 ```
 
 ZIP creation is implemented in Node.js and works identically from PowerShell, Command Prompt, Git Bash, and macOS
-Terminal. It does not require the system `zip` command.
+Terminal. It does not require the system `zip` command, but PHP must be available on `PATH` so every plugin PHP file
+can be syntax-checked before packaging.
 
 Pull requests run the project checks on Windows, macOS, and Linux. The PHP and browser smoke tests run on Linux.
 

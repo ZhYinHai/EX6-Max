@@ -20,22 +20,22 @@ Riley currently works only on the telemetry simulator. Dennis owns `main`, revie
 ```bash
 git clone https://github.com/ZhYinHai/EX6-Max.git
 cd EX6-Max
-git switch feature/telemetry
 npm ci
 npx playwright install chromium
 ```
 
-If `feature/telemetry` does not exist yet, create and publish it:
+Create a new short-lived branch for each telemetry change. Replace `live-data` with a short description of the work:
 
 ```bash
-git switch -c feature/telemetry
-git push -u origin feature/telemetry
+git switch main
+git pull --ff-only origin main
+git switch -c feature/telemetry-live-data
 ```
 
 ### Start each work session
 
 ```bash
-git switch feature/telemetry
+git switch feature/telemetry-live-data
 git fetch origin
 git merge origin/main
 ```
@@ -54,23 +54,30 @@ Do not edit NexLinq or shared integration files without consultation.
 
 ```bash
 npm run check
+npm run test:smoke
 git status
 git diff
 
 git add templates/sections/telemetry-simulator.php assets/js/telemetry-simulator.js assets/css/telemetry-simulator.css
 
 git commit -m "feat(telemetry): describe the change"
-git push
+git push -u origin feature/telemetry-live-data
 ```
 
 Then open GitHub and create a pull request with:
 
 ```text
 base: main
-compare: feature/telemetry
+compare: feature/telemetry-live-data
 ```
 
 Send the pull-request link to Dennis. Dennis reviews and merges it with `main`.
+
+If GitHub CLI is installed and authenticated, Riley can create the same pull request from the terminal:
+
+```bash
+gh pr create --base main --head feature/telemetry-live-data --title "Telemetry simulator update" --body "Describe the change and how it was tested."
+```
 
 ### If Riley accidentally works on `main`
 
@@ -111,11 +118,13 @@ PowerShell, Windows Terminal, and Git Bash. Node.js 20.19 or newer is required.
 4. Run `npm run check` and `npm run test:smoke` before pushing.
 5. Open a pull request into `main`. Dennis reviews and merges every pull request, with extra attention to shared integration files.
 6. Prefer squash merging so each pull request becomes one clear commit on `main`.
-7. After another pull request merges, rebase your branch before merging:
+7. After another pull request merges, merge the updated `main` into your branch before requesting review again:
 
    ```bash
    git fetch origin
-   git rebase origin/main
+   git merge origin/main
+   npm run check
+   npm run test:smoke
    ```
 
 ## Integration contract
@@ -124,16 +133,24 @@ PowerShell, Windows Terminal, and Git Bash. Node.js 20.19 or newer is required.
 - Telemetry selectors must remain scoped below `[data-telemetry-simulator]` once that root is introduced.
 - NexLinq selectors must remain scoped below `[data-ex6-page]` or a narrower NexLinq root.
 - Do not query or mutate another feature's internal markup.
-- New feature assets must be added to both the WordPress enqueue function and `index.html`.
+- New CSS or JavaScript bundles must be added to both the WordPress enqueue function and `index.html`. Images
+  referenced from existing CSS or JavaScript do not need a separate enqueue entry.
 - Bump `PHANTEKS_EX6_VERSION` only in an integration pull request or immediately before creating a release ZIP.
 
 ## Release ZIP
 
-After approved changes are merged into `main`, run this from the plugin root on macOS or Windows:
+After approved changes are merged, confirm the working tree is clean, update `main`, and create the release from
+the plugin root:
 
 ```bash
+git status
+git switch main
+git pull --ff-only origin main
 npm ci
+npm run test:smoke
 npm run release:zip
 ```
 
-The command validates the project and creates `phanteks-ex6-page.zip`. Do not manually assemble the archive.
+`npm run release:zip` runs the formatting, JavaScript and PHP syntax, and production-build checks before creating
+`phanteks-ex6-page.zip`. The browser smoke test is run separately above and by pull-request CI. Do not manually
+assemble the archive or release from an unfinished feature branch.

@@ -36,6 +36,6 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Check plugin PHP syntax
-        run: find . -name '*.php' -not -path './node_modules/*' -print0 | xargs -0 -n1 php -l
+        run: npm run check:php
       - run: npx playwright install --with-deps chromium
       - run: npm run test:smoke
