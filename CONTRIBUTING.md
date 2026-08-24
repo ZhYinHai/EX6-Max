@@ -21,7 +21,8 @@ Riley currently works only on the telemetry simulator. Dennis owns `main`, revie
 git clone https://github.com/ZhYinHai/EX6-Max.git
 cd EX6-Max
 git switch feature/telemetry
-npm install
+npm ci
+npx playwright install chromium
 ```
 
 If `feature/telemetry` does not exist yet, create and publish it:
@@ -56,9 +57,7 @@ npm run check
 git status
 git diff
 
-git add templates/sections/telemetry-simulator.php \
-  assets/js/telemetry-simulator.js \
-  assets/css/telemetry-simulator.css
+git add templates/sections/telemetry-simulator.php assets/js/telemetry-simulator.js assets/css/telemetry-simulator.css
 
 git commit -m "feat(telemetry): describe the change"
 git push
@@ -93,6 +92,9 @@ git branch -D
 
 ## Git workflow
 
+All commands in this guide are single-line, cross-platform commands. They work in macOS Terminal, Windows
+PowerShell, Windows Terminal, and Git Bash. Node.js 20 or newer is required.
+
 1. Keep `main` deployable and create one short-lived branch per change:
    - `feature/nexlinq-video-playback`
    - `feature/telemetry-live-data`
@@ -106,7 +108,7 @@ git branch -D
    ```
 
 3. Commit only one feature area at a time. Do not include generated `dist/`, `node_modules/`, `.DS_Store`, or plugin ZIP files.
-4. Run `npm run check` before pushing.
+4. Run `npm run check` and `npm run test:smoke` before pushing.
 5. Open a pull request into `main`. Dennis reviews and merges every pull request, with extra attention to shared integration files.
 6. Prefer squash merging so each pull request becomes one clear commit on `main`.
 7. After another pull request merges, rebase your branch before merging:
@@ -127,8 +129,11 @@ git branch -D
 
 ## Release ZIP
 
-From the plugin root:
+After approved changes are merged into `main`, run this from the plugin root on macOS or Windows:
 
 ```bash
-zip -r phanteks-ex6-page.zip phanteks-ex6-page.php templates assets README.md CONTRIBUTING.md -x "*.DS_Store"
+npm ci
+npm run release:zip
 ```
+
+The command validates the project and creates `phanteks-ex6-page.zip`. Do not manually assemble the archive.
